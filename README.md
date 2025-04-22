@@ -37,9 +37,13 @@ This tool helps AP students:
 **Formula Used:**
 
 TN_Math = (Math1A + Math1B + Math2A + Math2B) / 3
+
 TN_Physics = (Physics Theory + Physics Practical) / 1.8
+
 TN_Chemistry = (Chemistry Theory + Chemistry Practical) / 1.8
+
 TN_Total = TN_Math + TN_Physics + TN_Chemistry
+
 Open the index.html file in any browser.
 
 Input your IPE marks.
@@ -47,6 +51,7 @@ Input your IPE marks.
 Hit the Calculate Total button.
 
 Boom 💥 — see your TN cutoff and AI feedback.
+
 🛠 Tech Stack
 HTML
 
