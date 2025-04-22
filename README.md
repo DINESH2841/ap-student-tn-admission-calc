@@ -59,13 +59,12 @@ Local AI comment logic
 Made with ❤️ by Dinesh
 
 🔗 GitHub: @dinesh2841
+
 📧 Mail: sevennidinesh@gmail.com 
 
 📜 License
+
 This project is licensed under the MIT License — feel free to use, modify, and share!
 
 This project was built to help bridge the gap between Andhra Pradesh students and Tamil Nadu Engineering admissions. Let’s make access to education smoother and smarter 🙌
 
-yaml
-Copy
-Edit
