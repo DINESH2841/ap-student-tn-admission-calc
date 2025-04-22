@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Subject Marks Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      padding: 30px;
+      text-align: center;
+      color: #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    input[type=number] {
+      padding: 10px;
+      margin: 5px;
+      width: 60%;
+      font-size: 1em;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .warning {
+      color: red;
+      font-size: 0.85em;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result-box, .feedback-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #e3f2fd;
+      text-align: left;
+      display: inline-block;
+      width: 80%;
+      transition: background-color 0.3s;
+    }
+    .feedback-box {
+      background-color: #fff8e1;
+      border-left: 6px solid #ffc107;
+    }
+
+    /* DARK MODE STYLES */
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    body.dark input[type=number] {
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 2px solid #555;
+    }
+    body.dark button {
+      background-color: #333;
+    }
+    body.dark button:hover {
+      background-color: #555;
+    }
+    body.dark .result-box {
+      background-color: #1a1a2e;
+    }
+    body.dark .feedback-box {
+      background-color: #2c2c2c;
+      border-left: 6px solid #ff9800;
+    }
+  </style>
+</head>
+<body>
+  <h2>📊 Smart Subject Marks Calculator</h2>
+
+  <label style="display: block; margin-bottom: 20px;">
+    <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()" />
+    🌙 Dark Mode
+  </label>
+
+  <div id="inputs"></div>
+  <button onclick="calculateTotal()">Calculate Total</button>
+
+  <div class="result-box" id="result"></div>
+  <div class="feedback-box" id="ai-feedback"></div>
+
+  <script>
+    const subjects = [
+      { id: 'm1a', name: 'Maths 1A', max: 75 },
+      { id: 'm2a', name: 'Maths 2A', max: 75 },
+      { id: 'm1b', name: 'Maths 1B', max: 75 },
+      { id: 'm2b', name: 'Maths 2B', max: 75 },
+      { id: 'phy1', name: 'Physics 1', max: 60 },
+      { id: 'phy2', name: 'Physics 2', max: 60 },
+      { id: 'phyPrac', name: 'Physics Practical', max: 30 },
+      { id: 'chem1', name: 'Chemistry 1', max: 60 },
+      { id: 'chem2', name: 'Chemistry 2', max: 60 },
+      { id: 'chemPrac', name: 'Chemistry Practical', max: 30 }
+    ];
+
+    const container = document.getElementById("inputs");
+    subjects.forEach(subj => {
+      container.innerHTML += `
+        <div>
+          <input type="number" id="${subj.id}" placeholder="${subj.name} (Max ${subj.max})"
+            oninput="checkMax('${subj.id}', ${subj.max})">
+          <div class="warning" id="${subj.id}-warn"></div>
+        </div>
+      `;
+    });
+
+    function checkMax(id, max) {
+      const val = +document.getElementById(id).value;
+      const warn = document.getElementById(`${id}-warn`);
+      warn.textContent = (val > max) ? `❗ Max allowed is ${max}` : '';
+    }
+
+    function calculateTotal() {
+      let total = 0;
+      let valid = true;
+      let values = {};
+
+      for (let subj of subjects) {
+        let val = +document.getElementById(subj.id).value;
+        if (val > subj.max) {
+          document.getElementById(`${subj.id}-warn`).textContent = `❗ Max is ${subj.max}`;
+          valid = false;
+        } else {
+          document.getElementById(`${subj.id}-warn`).textContent = '';
+          values[subj.id] = val;
+        }
+      }
+
+      if (!valid) {
+        alert("Yo! Fix the invalid marks first 😤");
+        return;
+      }
+
+      const mathTotal = values.m1a + values.m2a + values.m1b + values.m2b; // out of 300
+      const physicsTotal = values.phy1 + values.phy2 + values.phyPrac;     // out of 150
+      const chemistryTotal = values.chem1 + values.chem2 + values.chemPrac;// out of 150
+
+      const mathFinal = (mathTotal / 300) * 100;
+      const physicsFinal = (physicsTotal / 150) * 50;
+      const chemistryFinal = (chemistryTotal / 150) * 50;
+      total = mathFinal + physicsFinal + chemistryFinal;
+
+      document.getElementById("result").innerHTML = `
+        <h3>📋 Results</h3>
+        🧠 <strong>Maths:</strong> ${mathFinal.toFixed(2)} / 100<br>
+        ⚛️ <strong>Physics:</strong> ${physicsFinal.toFixed(2)} / 50<br>
+        🧪 <strong>Chemistry:</strong> ${chemistryFinal.toFixed(2)} / 50<br>
+        <hr>
+        🎯 <strong>Total:</strong> ${total.toFixed(2)} / 200
+      `;
+
+      generateAIInsights(mathFinal, physicsFinal, chemistryFinal);
+    }
+
+    function getAIComment(subject, score, outOf) {
+      const percent = (score / outOf) * 100;
+      if (percent >= 90) return `💯 ${subject}: You're absolutely crushing it.`;
+      if (percent >= 80) return `🚀 ${subject}: Great job, you’re almost untouchable!`;
+      if (percent >= 70) return `📈 ${subject}: Decent grind, keep pushing.`;
+      if (percent >= 50) return `⚠️ ${subject}: Hanging in there, but don’t slack.`;
+      return `🛑 ${subject}: You need to go turbo mode. Let’s fix this.`;
+    }
+
+    function generateAIInsights(math, physics, chemistry) {
+      const feedbackMath = getAIComment("Maths", math, 100);
+      const feedbackPhysics = getAIComment("Physics", physics, 50);
+      const feedbackChem = getAIComment("Chemistry", chemistry, 50);
+
+      document.getElementById("ai-feedback").innerHTML = `
+        <h3>🧠 AI Feedback</h3>
+        <ul>
+          <li>${feedbackMath}</li>
+          <li>${feedbackPhysics}</li>
+          <li>${feedbackChem}</li>
+        </ul>
+        <p>✨ Stay consistent — your future self will thank you.</p>
+      `;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>
+    
