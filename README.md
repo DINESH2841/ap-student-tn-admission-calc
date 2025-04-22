@@ -4,6 +4,13 @@ Welcome to **AP Student TN Admission Calc** — a smart, web-based calculator ma
 
 ---
 
+## 🚀 Try It Live
+
+👉 [**Launch Web App**](https://dinesh2841.github.io/NPTEL-Assignment-Score-Calculator2.0/)
+
+> No login. No tracking. Just real results.
+
+---
 ## 💡 What It Does
 
 This tool helps AP students:
@@ -61,9 +68,11 @@ JavaScript (Vanilla)
 
 Local AI comment logic
 👨‍💻 Author
-Made with ❤️ by Dinesh
 
-🔗 GitHub: @dinesh2841
+Made with 💛 by Dinesh
+
+🔗 GitHub: [**@DINESH2841**](https://github.com/DINESH2841)
+
 
 📧 Mail: sevennidinesh@gmail.com 
 
